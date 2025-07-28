@@ -1,0 +1,23 @@
+name: Terraform Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      cloud:
+        description: 'Cloud Provider'
+        required: true
+        default: 'aws'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+      - name: Terraform Init & Apply
+        run: |
+          cd terraform/${{ github.event.inputs.cloud }}
+          terraform init
+          terraform apply -auto-approve
