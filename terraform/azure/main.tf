@@ -2,27 +2,24 @@ provider "azurerm" {
   features {}
 }
 
-# Grupo de recursos existente
 data "azurerm_resource_group" "existing" {
   name = "rg-earis-res-001"
 }
 
-# VNet existente
 data "azurerm_virtual_network" "existing_vnet" {
-  name                = "vnet-tf-demo"  # Cambia si el nombre real es otro
+  name                = "vnet-tf-demo"
   resource_group_name = data.azurerm_resource_group.existing.name
 }
 
-# Subred existente
 data "azurerm_subnet" "existing_subnet" {
-  name                 = "subnet-tf-demo" # Cambia si tu subred tiene otro nombre
+  name                 = "subnet-tf-demo"
   virtual_network_name = data.azurerm_virtual_network.existing_vnet.name
   resource_group_name  = data.azurerm_resource_group.existing.name
 }
 
 # NIC para Windows
 resource "azurerm_network_interface" "nic_windows" {
-  name                = "nic-tf-win2"
+  name                = "nic-tf-win3" # Nombre único nuevo
   location            = data.azurerm_resource_group.existing.location
   resource_group_name = data.azurerm_resource_group.existing.name
 
@@ -35,7 +32,7 @@ resource "azurerm_network_interface" "nic_windows" {
 
 # NIC para Linux
 resource "azurerm_network_interface" "nic_linux" {
-  name                = "nic-tf-linux"
+  name                = "nic-tf-linux2" # Nombre único nuevo
   location            = data.azurerm_resource_group.existing.location
   resource_group_name = data.azurerm_resource_group.existing.name
 
@@ -46,9 +43,9 @@ resource "azurerm_network_interface" "nic_linux" {
   }
 }
 
-# VM Windows Server (nombre cambiado para evitar conflicto)
+# VM Windows Server (nombre, NIC y disco únicos)
 resource "azurerm_windows_virtual_machine" "vm_windows" {
-  name                = "vm-tf-win2"  # Cambiado para evitar conflicto
+  name                = "vm-tf-win3"  # Nombre único nuevo
   resource_group_name = data.azurerm_resource_group.existing.name
   location            = data.azurerm_resource_group.existing.location
   size                = "Standard_B1s"
@@ -61,7 +58,7 @@ resource "azurerm_windows_virtual_machine" "vm_windows" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-    name                 = "osdisk-tf-win"
+    name                 = "osdisk-tf-win3"  # Nombre único nuevo
   }
 
   source_image_reference {
@@ -72,15 +69,15 @@ resource "azurerm_windows_virtual_machine" "vm_windows" {
   }
 }
 
-# VM Linux (con password authentication habilitado)
+# VM Linux (nombre, NIC y disco únicos)
 resource "azurerm_linux_virtual_machine" "vm_linux" {
-  name                = "vm-tf-linux"
+  name                = "vm-tf-linux2" # Nombre único nuevo
   resource_group_name = data.azurerm_resource_group.existing.name
   location            = data.azurerm_resource_group.existing.location
   size                = "Standard_B1s"
   admin_username      = "azureuser"
   admin_password      = "131560carlos*AZURE2024!"
-  disable_password_authentication = false   # Permite password en lugar de SSH
+  disable_password_authentication = false
   network_interface_ids = [
     azurerm_network_interface.nic_linux.id
   ]
@@ -88,7 +85,7 @@ resource "azurerm_linux_virtual_machine" "vm_linux" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-    name                 = "osdisk-tf-linux"
+    name                 = "osdisk-tf-linux2"  # Nombre único nuevo
   }
 
   source_image_reference {
