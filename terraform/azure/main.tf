@@ -2,7 +2,7 @@ provider "azurerm" {
   features {}
 }
 
-# Referencia a tu grupo de recursos existente
+# Referencia al grupo de recursos existente
 data "azurerm_resource_group" "existing" {
   name = "rg-earis-res-001"
 }
@@ -39,7 +39,7 @@ resource "azurerm_windows_virtual_machine" "vm" {
   location            = data.azurerm_resource_group.existing.location
   size                = "Standard_B1s"
   admin_username      = "azureuser"
-  admin_password      = "131560carlos"
+  admin_password      = "131560carlos*AZURE2024!"
   network_interface_ids = [
     azurerm_network_interface.nic.id
   ]
