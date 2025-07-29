@@ -9,16 +9,15 @@ data "azurerm_resource_group" "existing" {
 
 # Referencia a la VNet existente
 data "azurerm_virtual_network" "existing_vnet" {
-  name                = "vnet-tf-demo"       # Cambia si tu VNet real tiene otro nombre
+  name                = "vnet-tf-demo"       # Cambia si tu VNet tiene otro nombre
   resource_group_name = data.azurerm_resource_group.existing.name
 }
 
-# Nueva subred dentro de la VNet existente
-resource "azurerm_subnet" "subnet" {
-  name                 = "subnet-tf-demo"
-  resource_group_name  = data.azurerm_resource_group.existing.name
+# Referencia a la subred existente
+data "azurerm_subnet" "existing_subnet" {
+  name                 = "subnet-tf-demo"    # Cambia si tu subred tiene otro nombre
   virtual_network_name = data.azurerm_virtual_network.existing_vnet.name
-  address_prefixes     = ["10.0.1.0/24"]
+  resource_group_name  = data.azurerm_resource_group.existing.name
 }
 
 # NIC para Windows
@@ -29,7 +28,7 @@ resource "azurerm_network_interface" "nic_windows" {
 
   ip_configuration {
     name                          = "ipconfig-win"
-    subnet_id                     = azurerm_subnet.subnet.id
+    subnet_id                     = data.azurerm_subnet.existing_subnet.id
     private_ip_address_allocation = "Dynamic"
   }
 }
@@ -42,7 +41,7 @@ resource "azurerm_network_interface" "nic_linux" {
 
   ip_configuration {
     name                          = "ipconfig-linux"
-    subnet_id                     = azurerm_subnet.subnet.id
+    subnet_id                     = data.azurerm_subnet.existing_subnet.id
     private_ip_address_allocation = "Dynamic"
   }
 }
