@@ -19,7 +19,7 @@ data "azurerm_subnet" "existing_subnet" {
 
 # NIC para Windows
 resource "azurerm_network_interface" "nic_windows" {
-  name                = "nic-tf-win4"  # Nombre único nuevo
+  name                = "nic-tf-win5"  # Nombre único nuevo
   location            = data.azurerm_resource_group.existing.location
   resource_group_name = data.azurerm_resource_group.existing.name
 
@@ -32,7 +32,7 @@ resource "azurerm_network_interface" "nic_windows" {
 
 # NIC para Linux
 resource "azurerm_network_interface" "nic_linux" {
-  name                = "nic-tf-linux4"  # Nombre único nuevo
+  name                = "nic-tf-linux5"  # Nombre único nuevo
   location            = data.azurerm_resource_group.existing.location
   resource_group_name = data.azurerm_resource_group.existing.name
 
@@ -45,7 +45,7 @@ resource "azurerm_network_interface" "nic_linux" {
 
 # VM Windows Server (nombre, NIC y disco únicos)
 resource "azurerm_windows_virtual_machine" "vm_windows" {
-  name                = "vm-tf-win4"  # Nombre único nuevo
+  name                = "vm-tf-win5"  # Nombre único nuevo
   resource_group_name = data.azurerm_resource_group.existing.name
   location            = data.azurerm_resource_group.existing.location
   size                = "Standard_B1s"
@@ -58,7 +58,7 @@ resource "azurerm_windows_virtual_machine" "vm_windows" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-    name                 = "osdisk-tf-win4"  # Nombre único nuevo
+    name                 = "osdisk-tf-win5"  # Nombre único nuevo
   }
 
   source_image_reference {
@@ -71,7 +71,7 @@ resource "azurerm_windows_virtual_machine" "vm_windows" {
 
 # VM Linux (nombre, NIC y disco únicos)
 resource "azurerm_linux_virtual_machine" "vm_linux" {
-  name                = "vm-tf-linux4"  # Nombre único nuevo
+  name                = "vm-tf-linux5"  # Nombre único nuevo
   resource_group_name = data.azurerm_resource_group.existing.name
   location            = data.azurerm_resource_group.existing.location
   size                = "Standard_B1s"
@@ -85,7 +85,7 @@ resource "azurerm_linux_virtual_machine" "vm_linux" {
   os_disk {
     caching              = "ReadWrite"
     storage_account_type = "Standard_LRS"
-    name                 = "osdisk-tf-linux4"  # Nombre único nuevo
+    name                 = "osdisk-tf-linux5"  # Nombre único nuevo
   }
 
   source_image_reference {
