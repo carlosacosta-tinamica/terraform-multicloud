@@ -2,21 +2,22 @@ provider "azurerm" {
   features {}
 }
 
+# Referencia al grupo de recursos existente
 data "azurerm_resource_group" "existing" {
   name = "rg-earis-res-001"
 }
 
-resource "azurerm_virtual_network" "vnet" {
-  name                = "vnet-tf-demo"
-  address_space       = ["10.0.0.0/16"]
-  location            = data.azurerm_resource_group.existing.location
+# Referencia a la VNet existente
+data "azurerm_virtual_network" "existing_vnet" {
+  name                = "vnet-tf-demo"       # Cambia si tu VNet real tiene otro nombre
   resource_group_name = data.azurerm_resource_group.existing.name
 }
 
+# Nueva subred dentro de la VNet existente
 resource "azurerm_subnet" "subnet" {
   name                 = "subnet-tf-demo"
   resource_group_name  = data.azurerm_resource_group.existing.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
+  virtual_network_name = data.azurerm_virtual_network.existing_vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
