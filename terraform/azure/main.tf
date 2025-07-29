@@ -2,27 +2,27 @@ provider "azurerm" {
   features {}
 }
 
-# Referencia al grupo de recursos existente
+# Grupo de recursos existente
 data "azurerm_resource_group" "existing" {
   name = "rg-earis-res-001"
 }
 
-# Referencia a la VNet existente
+# VNet existente
 data "azurerm_virtual_network" "existing_vnet" {
-  name                = "vnet-tf-demo"       # Cambia si tu VNet tiene otro nombre
+  name                = "vnet-tf-demo"  # Cambia si el nombre real es otro
   resource_group_name = data.azurerm_resource_group.existing.name
 }
 
-# Referencia a la subred existente
+# Subred existente
 data "azurerm_subnet" "existing_subnet" {
-  name                 = "subnet-tf-demo"    # Cambia si tu subred tiene otro nombre
+  name                 = "subnet-tf-demo" # Cambia si tu subred tiene otro nombre
   virtual_network_name = data.azurerm_virtual_network.existing_vnet.name
   resource_group_name  = data.azurerm_resource_group.existing.name
 }
 
 # NIC para Windows
 resource "azurerm_network_interface" "nic_windows" {
-  name                = "nic-tf-win"
+  name                = "nic-tf-win2"
   location            = data.azurerm_resource_group.existing.location
   resource_group_name = data.azurerm_resource_group.existing.name
 
@@ -46,9 +46,9 @@ resource "azurerm_network_interface" "nic_linux" {
   }
 }
 
-# VM Windows Server
+# VM Windows Server (nombre cambiado para evitar conflicto)
 resource "azurerm_windows_virtual_machine" "vm_windows" {
-  name                = "vm-tf-win"
+  name                = "vm-tf-win2"  # Cambiado para evitar conflicto
   resource_group_name = data.azurerm_resource_group.existing.name
   location            = data.azurerm_resource_group.existing.location
   size                = "Standard_B1s"
@@ -72,14 +72,15 @@ resource "azurerm_windows_virtual_machine" "vm_windows" {
   }
 }
 
-# VM Linux (Ubuntu)
+# VM Linux (con password authentication habilitado)
 resource "azurerm_linux_virtual_machine" "vm_linux" {
   name                = "vm-tf-linux"
   resource_group_name = data.azurerm_resource_group.existing.name
   location            = data.azurerm_resource_group.existing.location
   size                = "Standard_B1s"
   admin_username      = "azureuser"
-  admin_password      = "131560carlos*AZURE2024!"  # O usa SSH para mayor seguridad
+  admin_password      = "131560carlos*AZURE2024!"
+  disable_password_authentication = false   # Permite password en lugar de SSH
   network_interface_ids = [
     azurerm_network_interface.nic_linux.id
   ]
