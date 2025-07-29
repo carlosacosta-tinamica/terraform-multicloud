@@ -2,29 +2,29 @@ provider "azurerm" {
   features {}
 }
 
-resource "azurerm_resource_group" "rg" {
-  name     = "rg-tf-demo"
-  location = "West Europe"
+# Referencia a tu grupo de recursos existente
+data "azurerm_resource_group" "existing" {
+  name = "rg-earis-res-001"
 }
 
 resource "azurerm_virtual_network" "vnet" {
   name                = "vnet-tf-demo"
   address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.existing.location
+  resource_group_name = data.azurerm_resource_group.existing.name
 }
 
 resource "azurerm_subnet" "subnet" {
   name                 = "subnet-tf-demo"
-  resource_group_name  = azurerm_resource_group.rg.name
+  resource_group_name  = data.azurerm_resource_group.existing.name
   virtual_network_name = azurerm_virtual_network.vnet.name
   address_prefixes     = ["10.0.1.0/24"]
 }
 
 resource "azurerm_network_interface" "nic" {
   name                = "nic-tf-demo"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = data.azurerm_resource_group.existing.location
+  resource_group_name = data.azurerm_resource_group.existing.name
 
   ip_configuration {
     name                          = "ipconfig1"
@@ -35,12 +35,11 @@ resource "azurerm_network_interface" "nic" {
 
 resource "azurerm_windows_virtual_machine" "vm" {
   name                = "vm-tf-demo"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = data.azurerm_resource_group.existing.name
+  location            = data.azurerm_resource_group.existing.location
   size                = "Standard_B1s"
   admin_username      = "azureuser"
-  admin_password      = "P@ssw0rd123456!" # Usa un secret real en producción
-
+  admin_password      = "131560carlos"
   network_interface_ids = [
     azurerm_network_interface.nic.id
   ]
